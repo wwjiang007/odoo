@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/messaging_notification_handler/messaging_not
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { one2one } = require('mail/static/src/model/model_field.js');
+const { htmlToTextContentInline } = require('mail.utils');
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -428,12 +429,10 @@ function factory(dependencies) {
             } else if (type === 'moderator') {
                 return this._handleNotificationPartnerModerator(data);
             } else if (type === 'simple_notification') {
-                const escapedTitle = owl.utils.escape(data.title);
                 const escapedMessage = owl.utils.escape(data.message);
                 this.env.services['notification'].notify({
                     message: escapedMessage,
                     sticky: data.sticky,
-                    title: escapedTitle,
                     type: data.warning ? 'warning' : 'danger',
                 });
             } else if (type === 'toggle_star') {
@@ -444,7 +443,7 @@ function factory(dependencies) {
                 return this._handleNotificationPartnerUnsubscribe(data.id);
             } else if (type === 'user_connection') {
                 return this._handleNotificationPartnerUserConnection(data);
-            } else {
+            } else if (!type) {
                 return this._handleNotificationPartnerChannel(data);
             }
         }
@@ -501,7 +500,6 @@ function factory(dependencies) {
                         this.env._t("You have been invited to: %s"),
                         owl.utils.escape(channel.name)
                     ),
-                    title: this.env._t("Invitation"),
                     type: 'warning',
                 });
             }
@@ -700,7 +698,6 @@ function factory(dependencies) {
             channel.update({ isServerPinned: false });
             this.env.services['notification'].notify({
                 message,
-                title: this.env._t("Unsubscribed"),
                 type: 'warning',
             });
         }
@@ -759,7 +756,7 @@ function factory(dependencies) {
                     notificationTitle = owl.utils.escape(authorName);
                 }
             }
-            const notificationContent = message.prettyBody.substr(0, PREVIEW_MSG_MAX_SIZE);
+            const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
             this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
             messaging.update({ outOfFocusUnreadMessageCounter: messaging.outOfFocusUnreadMessageCounter + 1 });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1

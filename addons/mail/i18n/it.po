@@ -1645,6 +1645,13 @@ msgid "Customer is required for inbox / email notification"
 msgstr "Per le notifiche posta in arrivo / e-mail il cliente è obbligatorio"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+"Impossibile aggiornare il messaggio o il destinatario di una notifica."
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -1743,7 +1750,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr "Tipo ritardo"
+msgstr "Tipologia ritardo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
@@ -2565,6 +2572,12 @@ msgstr "Solo chi sta seguendo"
 #, python-format
 msgid "Following"
 msgstr "Stai seguendo"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
@@ -3636,7 +3649,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Procedura guidata per unire partner"
+msgstr "Procedura per unire i partner"
 
 #. module: mail
 #: code:addons/mail/wizard/base_partner_merge.py:0
@@ -5888,7 +5901,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_activity__can_write
 msgid "Technical field to hide buttons if the current user has no access."
 msgstr ""
-"Campo tecnico per nascondere i bottoni se l'utente attuale non ha l'accesso."
+"Campo tecnico per nascondere i pulsanti se l'utente corrente non ha accesso."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__initial_res_model_id
@@ -5896,6 +5909,8 @@ msgid ""
 "Technical field to keep track of the model at the start of editing to "
 "support UX related behaviour"
 msgstr ""
+"Campo tecnico per tenere traccia del modello a inizio modifica, per "
+"supportare comportamenti relativi all'esperienza utente (UX)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
@@ -5967,7 +5982,7 @@ msgstr "Il valore \"Scadenza tra\" non può essere negativo."
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "The e-mail alias is already used. Please enter another one."
-msgstr ""
+msgstr "Alias e-mail già utilizzato, inserirne un altro."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_moderation_channel_email_uniq
@@ -6500,7 +6515,7 @@ msgstr "Utilizza dominio attivo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
 msgid "Use template"
-msgstr "Usare modello"
+msgstr "Modello da usare"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
@@ -6836,8 +6851,8 @@ msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
 msgstr ""
-"Non puoi creare un nuovo utente da qui.\n"
-"Accedi al pannello di configurazione per aggiungere un nuovo utente."
+"Impossibile creare un nuovo utente da qui.\n"
+" Per effettuare l'operazione andare al pannello di configurazione."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -6846,8 +6861,8 @@ msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
 msgstr ""
-"Non è possibile cancellare questi gruppi in quanto il gruppo Tutta l'Azienda"
-" è richiesto da altri moduli."
+"Impossibile eliminare i gruppi, il gruppo per l'intera azienda è richiesto "
+"da altri moduli."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6888,7 +6903,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
-msgstr "Hai messaggi da moderare. "
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -7149,7 +7164,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "or"
-msgstr "o"
+msgstr "oppure"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_3

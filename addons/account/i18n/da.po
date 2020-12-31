@@ -12331,11 +12331,11 @@ msgstr ""
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
-"The date (%(date)s) doesn't match the sequence number (%(sequence)s).\n"
-"You might want to remove the sequence before proceeding with the change of the date."
+"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
+"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
 msgstr ""
-"Datoen (%(date)s) stemmer ikke overens med sekvens nummeret (%(sequence)s).\n"
-"Det kan være du vil fjerne sekvensen før du fortsætter med at ændre datoen."
+"%(date_field)s (%(date)s) stemmer ikke overens med %(sequence_field)s (%(sequence)s).\n"
+"Det kan tænkes, at du vil rydde feltet %(sequence_field)s før du fortsætter med ændring af datoen."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -14497,6 +14497,8 @@ msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
 msgstr ""
+"Du kan ikke redigere journalen for en kontobevægelse hvis den allerede er "
+"blevet tildelt et sekvensnummer."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

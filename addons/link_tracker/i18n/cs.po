@@ -5,7 +5,8 @@
 # Translators:
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
-# Jiří Podhorecký, 2020
+# trendspotter, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
@@ -205,7 +206,7 @@ msgstr "Střední hodnoty"
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
 msgid "No data yet!"
-msgstr ""
+msgstr "Zatím žádná data!"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
@@ -280,7 +281,7 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Toto je zdroj odkazu, např. Vyhledávač, jiná doména nebo název seznamu "
+"Toto je zdroj odkazu, např. vyhledávač, jiná doména nebo název seznamu "
 "e-mailů"
 
 #. module: link_tracker

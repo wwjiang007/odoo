@@ -1611,6 +1611,12 @@ msgid "Customer is required for inbox / email notification"
 msgstr "받은 편지함 / 이메일 알림을 받으려면 고객이 필요합니다"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2511,6 +2517,12 @@ msgstr "팔로워 전용"
 #, python-format
 msgid "Following"
 msgstr "팔로잉"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon

@@ -213,7 +213,7 @@ class Website(models.Model):
         addr = partner.address_get(['delivery'])
         if not request.website.is_public_user():
             last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
-            if last_sale_order:  # first = me
+            if last_sale_order and last_sale_order.partner_shipping_id.active:  # first = me
                 addr['delivery'] = last_sale_order.partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
         values = {
@@ -264,7 +264,7 @@ class Website(models.Model):
                 self.env['account.fiscal.position'].sudo()
                 .with_company(sale_order.company_id.id)
                 .get_fiscal_position(sale_order.partner_id.id, delivery_id=sale_order.partner_shipping_id.id)
-            )
+            ).id
             if sale_order.fiscal_position_id.id != fpos_id:
                 sale_order = None
 
@@ -383,6 +383,18 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
         return suggested_controllers
+
+    def _bootstrap_snippet_filters(self):
+        super(Website, self)._bootstrap_snippet_filters()
+        action = self.env.ref('website_sale.dynamic_snippet_products_action', raise_if_not_found=False)
+        if action:
+            self.env['website.snippet.filter'].create({
+                'action_server_id': action.id,
+                'field_names': 'display_name,description_sale,image_512,list_price',
+                'limit': 16,
+                'name': _('Products'),
+                'website_id': self.id,
+            })
 
 
 class WebsiteSaleExtraField(models.Model):

@@ -41,7 +41,7 @@ msgstr "${object.partner_id.lang}"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr ""
+msgstr "%(activity_name)s: %(summary)salocat pentru tine "
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -61,7 +61,7 @@ msgstr "%(user_name)ste-a invitat să urmărești un nou document"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%d Message"
-msgstr ""
+msgstr "%d Mesaje"
 
 #. module: mail
 #. openerp-web
@@ -82,7 +82,7 @@ msgstr "%d zilele restante"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "%d days overdue:"
-msgstr ""
+msgstr "%d zilele restante:"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -108,14 +108,14 @@ msgstr "%s creat"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%s from %s"
-msgstr ""
+msgstr "%s de la %s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/notification_request/notification_request.js:0
 #, python-format
 msgid "%s has a request"
-msgstr ""
+msgstr "%s are o solicitare"
 
 #. module: mail
 #. openerp-web
@@ -298,7 +298,7 @@ msgstr "<p>Creați un canal aici</p>"
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr ""
+msgstr "<p>Creați un canal public sau privat.</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -352,7 +352,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Activities</span>"
-msgstr "<span class=\"o_form_label\">Activităţi</span>"
+msgstr "<span class=\"o_form_label\">Activități</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -686,7 +686,7 @@ msgstr "Adăugați un atașament"
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
 #, python-format
 msgid "Add attachments"
-msgstr ""
+msgstr "Adăgați atașamente"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -704,7 +704,7 @@ msgstr "Adaugați contactele pentru a fi înștiințate..."
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Add or join a channel"
-msgstr ""
+msgstr "Adăugați sau aderați la un canal"
 
 #. module: mail
 #. openerp-web
@@ -815,14 +815,14 @@ msgstr ""
 #: code:addons/mail/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an email."
-msgstr ""
+msgstr "A apărut o eroare la trimiterea unui e-mail."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
 msgid "An unexpected error occurred during the creation of the chat."
-msgstr ""
+msgstr "A apărut o eroare neașteptată la crearea chatului."
 
 #. module: mail
 #. openerp-web
@@ -871,6 +871,8 @@ msgid ""
 "Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
+"Sigur doriți să renunțați la %seșecuri de livrare a e-mailurilor. Nu veți "
+"mai putea să retransmiteți aceste e-mailuri mai târziu!"
 
 #. module: mail
 #. openerp-web
@@ -1527,13 +1529,14 @@ msgstr "Creare Uid"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr ""
+msgstr "Creați un %(document)snou"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s by sending an email to %(email_link)s"
 msgstr ""
+"Creați un %(document)snou prin trimiterea unui e-mail la %(email_link)s"
 
 #. module: mail
 #. openerp-web
@@ -1646,6 +1649,12 @@ msgstr "Nume Canal Personalizat"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "Clientul trebuie să primească notificări inbox / email"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2051,7 +2060,7 @@ msgstr "Scadent în %dzile"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "Due in %d days:"
-msgstr ""
+msgstr "Scadent în %dzile:"
 
 #. module: mail
 #. openerp-web
@@ -2569,6 +2578,12 @@ msgid "Following"
 msgstr "Urmărind"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
@@ -3069,7 +3084,7 @@ msgstr "Invitație"
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "Invitation to follow %(document_model)s: %(document_name)s"
-msgstr ""
+msgstr "Invitație de a urmări %(document_model)s: %(document_name)s"
 
 #. module: mail
 #. openerp-web
@@ -4849,7 +4864,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/messaging_menu/messaging_menu.xml:0
 #, python-format
 msgid "Please wait..."
-msgstr ""
+msgstr "Te rog așteaptă ..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__notification_type
@@ -4976,7 +4991,7 @@ msgstr "Confidențialitate"
 #: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Private channel"
-msgstr ""
+msgstr "Canal privat"
 
 #. module: mail
 #. openerp-web
@@ -4990,7 +5005,7 @@ msgstr "Canale publice"
 #: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Public channel"
-msgstr ""
+msgstr "Canal public"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -5009,7 +5024,7 @@ msgstr "Editor: Notificare de actualizare"
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Quick search..."
-msgstr ""
+msgstr "Căutare rapidă..."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:0
@@ -5845,7 +5860,7 @@ msgstr "Subiect:"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
 msgid "Substitution"
-msgstr "Substituţie"
+msgstr "Substituție"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subtype_id
@@ -7106,7 +7121,7 @@ msgstr "general"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been created from:"
-msgstr "a fost creat din:"
+msgstr "provine din:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link

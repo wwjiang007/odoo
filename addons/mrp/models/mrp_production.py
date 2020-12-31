@@ -414,6 +414,8 @@ class MrpProduction(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_production_location(self):
+        if not self.company_id:
+            return
         location_by_company = self.env['stock.location'].read_group([
             ('company_id', 'in', self.company_id.ids),
             ('usage', '=', 'production')
@@ -1420,6 +1422,8 @@ class MrpProduction(models.Model):
                     wo.qty_producing = 1
                 else:
                     wo.qty_producing = wo.qty_remaining
+                if wo.qty_producing == 0:
+                    wo.action_cancel()
 
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
 
