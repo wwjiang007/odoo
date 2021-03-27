@@ -309,7 +309,7 @@ class Applicant(models.Model):
         return res
 
     def get_empty_list_help(self, help):
-        if 'active_id' in  self.env.context:
+        if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
             alias_id = self.env['hr.job'].browse(self.env.context['active_id']).alias_id
         else:
             alias_id = False
@@ -362,6 +362,9 @@ class Applicant(models.Model):
             'res_model': self._name,
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],
+            'context': {
+                'active_test': False
+            },
         }
 
     def _track_template(self, changes):

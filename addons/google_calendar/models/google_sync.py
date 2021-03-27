@@ -104,7 +104,11 @@ class GoogleSync(models.AbstractModel):
             synced.write({self._active_name: False})
             self = self - synced
         elif synced:
-            raise UserError(_("You cannot delete a record synchronized with Google Calendar, archive it instead."))
+            # Since we can not delete such an event (see method comment), we archive it.
+            # Notice that archiving an event will delete the associated event on Google.
+            # Then, since it has been deleted on Google, the event is also deleted on Odoo DB (_sync_google2odoo).
+            self.action_archive()
+            return True
         return super().unlink()
 
     @api.model
@@ -151,8 +155,7 @@ class GoogleSync(models.AbstractModel):
             dict(self._odoo_values(e, default_reminders), need_sync=False)
             for e in new
         ]
-        new_odoo = self.create(odoo_values)
-
+        new_odoo = self._create_from_google(new, odoo_values)
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
         cancelled_odoo._cancel()
@@ -166,7 +169,7 @@ class GoogleSync(models.AbstractModel):
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
             if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
-                odoo_record.write(vals)
+                odoo_record._write_from_google(gevent, vals)
                 synced_records |= odoo_record
 
         return synced_records
@@ -176,7 +179,9 @@ class GoogleSync(models.AbstractModel):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 google_service.delete(google_id, token=token, timeout=timeout)
-                self.need_sync = False
+                # When the record has been deleted on our side, we need to delete it on google but we don't want
+                # to raise an error because the record don't exists anymore.
+                self.exists().need_sync = False
 
     @after_commit
     def _google_patch(self, google_service: GoogleCalendarService, google_id, values, timeout=TIMEOUT):
@@ -212,6 +217,13 @@ class GoogleSync(models.AbstractModel):
                     ('need_sync', '=', True),
             ]])
         return self.with_context(active_test=False).search(domain)
+
+    def _write_from_google(self, gevent, vals):
+        self.write(vals)
+
+    @api.model
+    def _create_from_google(self, gevents, vals_list):
+        return self.create(vals_list)
 
     @api.model
     def _odoo_values(self, google_event: GoogleEvent, default_reminders=()):

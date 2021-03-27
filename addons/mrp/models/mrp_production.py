@@ -86,7 +86,13 @@ class MrpProduction(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain="[('id', 'in', allowed_product_ids)]",
+        domain="""[
+            ('type', 'in', ['product', 'consu']),
+            '|',
+                ('company_id', '=', False),
+                ('company_id', '=', company_id)
+        ]
+        """,
         readonly=True, required=True, check_company=True,
         states={'draft': [('readonly', False)]})
     product_tracking = fields.Selection(related='product_id.tracking')
@@ -718,6 +724,8 @@ class MrpProduction(models.Model):
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
                 if production.is_planned:
                     production.button_unplan()
+                    move_vals = self._get_move_finished_values(self.product_id, self.product_uom_qty, self.product_uom_id)
+                    production.move_finished_ids.write({'date': move_vals['date']})
             if vals.get('date_planned_start'):
                 production.move_raw_ids.write({'date': production.date_planned_start, 'date_deadline': production.date_planned_start})
             if vals.get('date_planned_finished'):

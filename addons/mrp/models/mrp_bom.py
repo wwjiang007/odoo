@@ -30,11 +30,11 @@ class MrpBom(models.Model):
         default='normal', required=True)
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product',
-        check_company=True,
+        check_company=True, index=True,
         domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", required=True)
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        check_company=True,
+        check_company=True, index=True,
         domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', 'in', ['product', 'consu']),  '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="If a product variant is defined the BOM is available only for this product.")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
@@ -143,6 +143,13 @@ class MrpBom(models.Model):
 
     def name_get(self):
         return [(bom.id, '%s%s' % (bom.code and '%s: ' % bom.code or '', bom.product_tmpl_id.display_name)) for bom in self]
+
+    @api.constrains('product_tmpl_id', 'product_id', 'type')
+    def check_kit_has_not_orderpoint(self):
+        product_ids = [pid for bom in self.filtered(lambda bom: bom.type == "phantom")
+                           for pid in (bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids)]
+        if self.env['stock.warehouse.orderpoint'].search([('product_id', 'in', product_ids)], count=True):
+            raise ValidationError(_("You can not create a kit-type bill of materials for products that have at least one reordering rule."))
 
     def unlink(self):
         if self.env['mrp.production'].search([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):

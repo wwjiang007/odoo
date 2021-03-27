@@ -65,7 +65,7 @@ QUnit.test('simplest layout', async function (assert) {
     const attachmentEl = document.querySelector('.o_Attachment');
     assert.strictEqual(
         attachmentEl.dataset.attachmentLocalId,
-        this.env.models['mail.attachment'].find(attachment => attachment.id === 750).localId,
+        this.env.models['mail.attachment'].findFromIdentifyingData({ id: 750 }).localId,
         "attachment component should be linked to attachment store model"
     );
     assert.strictEqual(
@@ -665,6 +665,94 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
     } finally {
         assert.ok(successfulLoad, 'should not crash when the image is loaded');
     }
+});
+
+QUnit.test('plain text file is viewable', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.txt",
+        id: 750,
+        mimetype: 'text/plain',
+        name: "test.txt",
+    });
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'card',
+        isDownloadable: false,
+        isEditable: false,
+    });
+    assert.hasClass(
+        document.querySelector('.o_Attachment'),
+        'o-viewable',
+        "should be viewable",
+    );
+});
+
+QUnit.test('HTML file is viewable', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.html",
+        id: 750,
+        mimetype: 'text/html',
+        name: "test.html",
+    });
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'card',
+        isDownloadable: false,
+        isEditable: false,
+    });
+    assert.hasClass(
+        document.querySelector('.o_Attachment'),
+        'o-viewable',
+        "should be viewable",
+    );
+});
+
+QUnit.test('ODT file is not viewable', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.odt",
+        id: 750,
+        mimetype: 'application/vnd.oasis.opendocument.text',
+        name: "test.odt",
+    });
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'card',
+        isDownloadable: false,
+        isEditable: false,
+    });
+    assert.doesNotHaveClass(
+        document.querySelector('.o_Attachment'),
+        'o-viewable',
+        "should not be viewable",
+    );
+});
+
+QUnit.test('DOCX file is not viewable', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.docx",
+        id: 750,
+        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        name: "test.docx",
+    });
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'card',
+        isDownloadable: false,
+        isEditable: false,
+    });
+    assert.doesNotHaveClass(
+        document.querySelector('.o_Attachment'),
+        'o-viewable',
+        "should not be viewable",
+    );
 });
 
 });
