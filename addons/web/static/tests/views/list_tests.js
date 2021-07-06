@@ -9931,6 +9931,53 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('removing a groupby while adding a line from list', async function (assert) {
+        assert.expect(1);
+
+        let checkUnselectRow = false;
+        testUtils.mock.patch(ListRenderer, {
+            unselectRow(options = {}) {
+                if (checkUnselectRow) {
+                    assert.step('unselectRow');
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1" editable="bottom">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <field name="foo"/>
+                        <group expand="1" string="Group By">
+                            <filter name="groupby_foo" context="{'group_by': 'foo'}"/>
+                        </group>
+                    </search>
+                `,
+            },
+        });
+
+        await cpHelpers.toggleGroupByMenu(list);
+        await cpHelpers.toggleMenuItem(list, 0);
+        // expand group
+        await testUtils.dom.click(list.el.querySelector('th.o_group_name'));
+        await testUtils.dom.click(list.el.querySelector('td.o_group_field_row_add a'));
+        checkUnselectRow = true;
+        await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
+        assert.verifySteps([]);
+        testUtils.mock.unpatch(ListRenderer);
+        list.destroy();
+    });
+
     QUnit.test('cell-level keyboard navigation in editable grouped list', async function (assert) {
         assert.expect(56);
 
@@ -11247,6 +11294,79 @@ QUnit.module('Views', {
         ControlPanel.unpatch('test.ControlPanel');
 
         list.destroy();
+    });
+
+    QUnit.test('edition, then navigation with tab (with a readonly re-evaluated field and onchange)', async function (assert) {
+        // This test makes sure that if we have a cell in a row that will become
+        // read-only after editing another cell, in case the keyboard navigation
+        // move over it before it becomes read-only and there are unsaved changes
+        // (which will trigger an onchange), the focus of the next activable
+        // field will not crash
+        assert.expect(4);
+
+        this.data.bar.onchanges = {
+            o2m: function () {},
+        };
+        this.data.bar.fields.o2m = {string: "O2M field", type: "one2many", relation: "foo"};
+        this.data.bar.records[0].o2m = [1, 4];
+
+        var form = await createView({
+            View: FormView,
+            model: 'bar',
+            res_id: 1,
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="display_name"/>' +
+                        '<field name="o2m">' +
+                            '<tree editable="bottom">' +
+                                '<field name="foo"/>' +
+                                '<field name="date" attrs="{\'readonly\': [(\'foo\', \'!=\', \'yop\')]}"/>' +
+                                '<field name="int_field"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.step(args.method + ':' + args.model);
+                }
+                return this._super.apply(this, arguments);
+            },
+            fieldDebounce: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var jq_evspecial_focus_trigger = $.event.special.focus.trigger;
+        // As KeyboardEvent will be triggered by JS and not from the
+        // User-Agent itself, the focus event will not trigger default
+        // action (event not being trusted), we need to manually trigger
+        // 'change' event on the currently focused element
+        $.event.special.focus.trigger = function () {
+            if (this !== document.activeElement && this.focus) {
+                var activeElement = document.activeElement;
+                this.focus();
+                $(activeElement).trigger('change');
+            }
+        };
+
+        // editable list, click on first td and press TAB
+        await testUtils.dom.click(form.$('.o_data_cell:contains(yop)'));
+        assert.strictEqual(document.activeElement, form.$('tr.o_selected_row input[name="foo"]')[0],
+            "focus should be on an input with name = foo");
+        testUtils.fields.editInput(form.$('tr.o_selected_row input[name="foo"]'), 'new value');
+        var tabEvent = $.Event("keydown", { which: $.ui.keyCode.TAB });
+        await testUtils.dom.triggerEvents(form.$('tr.o_selected_row input[name="foo"]'), [tabEvent]);
+        assert.strictEqual(document.activeElement, form.$('tr.o_selected_row input[name="int_field"]')[0],
+            "focus should be on an input with name = int_field");
+
+        // Restore origin jQuery special trigger for 'focus'
+        $.event.special.focus.trigger = jq_evspecial_focus_trigger;
+
+        assert.verifySteps(["onchange:bar"], "onchange method should have been called");
+        form.destroy();
     });
 });
 
